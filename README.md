@@ -1,4 +1,4 @@
-# Carnet de salle
+# Fonte
 
 Appli web installable pour organiser sa semaine de musculation : planning lu depuis un Google Sheet partagé par lien, séances composées exercice par exercice, suivi de séance avec minuteur de repos, progression en graphiques et suivi du corps (poids, masse grasse, IMC, FFMI).
 

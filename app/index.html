@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Carnet de salle</title>
+<title>Fonte</title>
 <meta name="description" content="Ta semaine de salle, tes séances, ta progression et ton corps.">
 <meta name="theme-color" content="#0A1024">
 <meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Carnet">
+<meta name="apple-mobile-web-app-title" content="Fonte">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -441,7 +441,7 @@ main.wrap{padding-block:4px calc(96px + env(safe-area-inset-bottom,0px))}
 <body>
 
 <header class="top wrap">
-  <span class="brand"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>Carnet de salle</span>
+  <span class="brand"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>Fonte</span>
   <span class="top-right"><span class="top-date" id="top-date"></span><button class="icon-btn sm" data-act="settings" aria-label="Réglages"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M15 5v4M9 15v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></span>
 </header>
 <main class="wrap">
@@ -993,14 +993,14 @@ function renderSettings(){
    +'<section class="set-block"><h3>Sauvegarde</h3><p class="hint">Tes données sont enregistrées <b>uniquement sur ce téléphone</b>. Exporte-les de temps en temps : le fichier te permet de tout retrouver, ou de passer sur un autre téléphone.</p><p class="hint">Dernière sauvegarde : '+(le?esc(dLong(iso(new Date(le))).toLowerCase())+' à '+hm(le):'jamais')+'</p>'
    +'<div class="row"><button class="btn primary grow" data-act="st-export">Exporter</button><label class="btn ghost grow" for="st-import">Importer</label><input id="st-import" type="file" accept="application/json,.json" hidden></div>'+imp+'</section>'
    +'<section class="set-block"><h3>Planning Google</h3><p class="hint">Le lien de ton tableur, partagé « tous ceux qui ont le lien ». L’appli le relit à chaque ouverture.</p><label class="sr" for="st-sheet">Lien du tableur</label><input id="st-sheet" class="search" value="'+esc(link)+'" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" inputmode="url"><button class="btn ghost" data-act="st-sheet-save">Enregistrer et relire</button></section>'
-   +(installEvt&&!isStandalone()?'<section class="set-block"><h3>Installer</h3><p class="hint">Ajoute le Carnet sur ton écran d’accueil, comme une vraie appli.</p><button class="btn primary" data-act="st-install">Installer l’appli</button></section>':'')
-   +'<section class="set-block"><h3>À propos</h3><p class="hint">Carnet de salle · version 1. Fonctionne hors connexion ; seule la lecture du planning a besoin d’Internet.</p></section>'
+   +(installEvt&&!isStandalone()?'<section class="set-block"><h3>Installer</h3><p class="hint">Ajoute Fonte sur ton écran d’accueil, comme une vraie appli.</p><button class="btn primary" data-act="st-install">Installer l’appli</button></section>':'')
+   +'<section class="set-block"><h3>À propos</h3><p class="hint">Fonte · version 1. Fonctionne hors connexion ; seule la lecture du planning a besoin d’Internet.</p></section>'
    +'</div>';
 }
 function doExport(){
   var data={app:'carnet-de-salle',format:1,exporteLe:new Date().toISOString(),data:S.db.dump()};
   var blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='carnet-de-salle-sauvegarde-'+iso(new Date())+'.json';
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fonte-sauvegarde-'+iso(new Date())+'.json';
   document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1500);
   try{localStorage.setItem('carnet-last-export',new Date().toISOString());}catch(e){}
   S.dismissBackup=true;toast('Sauvegarde téléchargée');renderMain();if(ui.sheet==='settings')renderSettings();
@@ -1014,7 +1014,7 @@ function readImport(file){
       IMP={data:d,nb:{s:Object.keys(d.seances||{}).length,h:Object.keys(d.historique||{}).length,c:Object.keys(d.corps||{}).length}};
       var has=Object.keys(S.seances).length||S.hist.length||Object.keys(S.corps).length;
       if(!has)applyImport();else renderSettings();
-    }catch(e){toast('Ce fichier n’est pas une sauvegarde du Carnet de salle.');}
+    }catch(e){toast('Ce fichier n’est pas une sauvegarde de Fonte.');}
   };
   fr.onerror=function(){toast('Lecture du fichier impossible.');};
   fr.readAsText(file);
@@ -1241,7 +1241,7 @@ function showSheet(k){ui.sheet=k;$('#sheet-wrap').hidden=false;lock();}
 function closeSheet(){ui.sheet=null;PK=null;CH=null;$('#sheet-wrap').hidden=true;$('#sheet').innerHTML='';lock();}
 
 function bannerHtml(){
-  if(!S.loading&&!Object.keys(S.seances).length&&!S.hist.length&&!Object.keys(S.corps).length)return '<div class="banner backup"><div><b>Bienvenue dans ton Carnet</b><span>Récupère tes séances et ton historique : Réglages, puis Importer le fichier de sauvegarde.</span></div><div class="bk-btns"><button class="btn primary sm" data-act="settings">Importer</button></div></div>';
+  if(!S.loading&&!Object.keys(S.seances).length&&!S.hist.length&&!Object.keys(S.corps).length)return '<div class="banner backup"><div><b>Bienvenue dans Fonte</b><span>Récupère tes séances et ton historique : Réglages, puis Importer le fichier de sauvegarde.</span></div><div class="bk-btns"><button class="btn primary sm" data-act="settings">Importer</button></div></div>';
   var le=lastExport();
   if(!S.dismissBackup&&S.hist.length&&(!le||Date.now()-new Date(le).getTime()>14*864e5))return '<div class="banner backup"><div><b>Pense à sauvegarder</b><span>'+(le?'Dernière sauvegarde le '+esc(dShort(iso(new Date(le)))):'Aucune sauvegarde pour l’instant')+' : tes données ne sont que sur ce téléphone.</span></div><div class="bk-btns"><button class="btn primary sm" data-act="st-export">Exporter</button><button class="mini" data-act="bk-dismiss" aria-label="Plus tard">'+svg(IC.x,16)+'</button></div></div>';
   var d=R||readDraft();

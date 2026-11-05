@@ -1,6 +1,6 @@
 {
-  "name": "Carnet de salle",
-  "short_name": "Carnet",
+  "name": "Fonte",
+  "short_name": "Fonte",
   "description": "Ta semaine de salle, tes séances, ta progression et ton corps.",
   "lang": "fr",
   "start_url": "./",
