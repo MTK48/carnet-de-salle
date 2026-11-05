@@ -1355,18 +1355,20 @@ function recapCounts(mon,rot,today){
   }
   return {done:done,plan:plan};
 }
-var REP_MIN=10,REP_MAX=18;
+var RECAP_MAX=16;
 function recapHtml(mon,rot,today){
-  var c=recapCounts(mon,rot,today),ids=Object.keys(c.done),td=0,tp=0,mx=0;
-  ids.forEach(function(g){td+=c.done[g];tp+=c.plan[g];mx=Math.max(mx,c.done[g]+c.plan[g]);});
-  var M=Math.max(25,Math.ceil((mx+2)/5)*5),pc=function(v){return Math.min(100,v/M*100);};
+  var c=recapCounts(mon,rot,today),td=0,tp=0;
+  var ids=Object.keys(c.done).filter(function(g){return c.done[g]+c.plan[g]>0;});
+  ids.forEach(function(g){td+=c.done[g];tp+=c.plan[g];});
+  var M=RECAP_MAX,pc=function(v){return Math.min(100,v/M*100);};
   var open=S.recapOpen!==false;
   var head='<button class="recap-head" data-act="recap-toggle" aria-expanded="'+open+'"><span class="eyebrow">Séries par muscle</span><span class="recap-tot">'+td+' faite'+(td>1?'s':'')+(tp?' · '+tp+' prévue'+(tp>1?'s':''):'')+'</span>'+svg(IC.chev,18)+'</button>';
   if(!open)return '<section class="recap">'+head+'</section>';
+  if(!ids.length)return '<section class="recap">'+head+'<div class="recap-body"><p class="recap-note">Aucune série faite ni prévue cette semaine.</p></div></section>';
   var rows=ids.map(function(g){var d=c.done[g],p=c.plan[g];
-    return '<li class="rc-row"><span class="rc-name">'+disc(g)+esc(gName(g))+'</span><div class="rc-bar" role="img" aria-label="'+esc(gName(g))+' : '+d+' séries faites, '+p+' prévues"><span class="rc-band" style="left:'+pc(REP_MIN)+'%;width:'+(pc(REP_MAX)-pc(REP_MIN))+'%"></span><span class="rc-done" style="width:'+pc(d)+'%"></span><span class="rc-plan" style="left:'+pc(d)+'%;width:'+(pc(d+p)-pc(d))+'%"></span></div><span class="rc-val"><b>'+d+'</b>'+(p?' +'+p:'')+'</span></li>';}).join('');
-  var scale='<li class="rc-row rc-scale" aria-hidden="true"><span></span><div class="rc-ticks"><i style="left:0">0</i><i style="left:'+pc(REP_MIN)+'%">'+REP_MIN+'</i><i style="left:'+pc(REP_MAX)+'%">'+REP_MAX+'</i><i style="left:100%">'+M+'</i></div><span></span></li>';
-  return '<section class="recap">'+head+'<div class="recap-body"><div class="recap-legend"><span><i class="lgd done"></i>Faites</span><span><i class="lgd plan"></i>Encore prévues</span><span><i class="lgd band"></i>Repère '+REP_MIN+' à '+REP_MAX+'</span></div><ul class="recap-list">'+rows+scale+'</ul><p class="recap-note">Séries directes cochées, hors échauffement et cardio. Les séries « prévues » viennent des séances des jours à venir.</p></div></section>';
+    return '<li class="rc-row"><span class="rc-name">'+disc(g)+esc(gName(g))+'</span><div class="rc-bar" role="img" aria-label="'+esc(gName(g))+' : '+d+' séries faites, '+p+' prévues, sur '+M+'"><span class="rc-done" style="width:'+pc(d)+'%"></span><span class="rc-plan" style="left:'+pc(d)+'%;width:'+(pc(d+p)-pc(d))+'%"></span></div><span class="rc-val"><b>'+d+'</b>'+(p?' +'+p:'')+'</span></li>';}).join('');
+  var scale='<li class="rc-row rc-scale" aria-hidden="true"><span></span><div class="rc-ticks"><i style="left:0">0</i><i style="left:100%">'+M+'</i></div><span></span></li>';
+  return '<section class="recap">'+head+'<div class="recap-body"><div class="recap-legend"><span><i class="lgd done"></i>Faites</span><span><i class="lgd plan"></i>Encore prévues</span></div><ul class="recap-list">'+rows+scale+'</ul><p class="recap-note">Séries directes cochées, hors échauffement et cardio. Les séries « prévues » viennent des séances des jours à venir.</p></div></section>';
 }
 function sortedSeances(){return Object.keys(S.seances).map(function(id){return Object.assign({id:id},S.seances[id]);}).sort(function(a,b){var ao=typeof a.ordre==='number',bo=typeof b.ordre==='number';if(ao&&bo)return a.ordre-b.ordre;if(ao!==bo)return ao?-1:1;return ((a.exemple?1:0)-(b.exemple?1:0))||String(a.nom).localeCompare(String(b.nom),'fr');});}
 function nextOrdre(){var m=null;Object.keys(S.seances).forEach(function(id){var o=S.seances[id].ordre;if(typeof o==='number'&&(m===null||o>m))m=o;});return m===null?null:m+1;}
